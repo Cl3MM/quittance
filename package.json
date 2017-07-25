@@ -1,0 +1,27 @@
+{
+  "name": "quittance",
+  "version": "1.0.0",
+  "description": "Quittance email generator",
+  "main": "quittance.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cl3MM/quittance.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cl3MM/quittance/issues"
+  },
+  "homepage": "https://github.com/Cl3MM/quittance#readme",
+  "dependencies": {
+    "fs-extra": "^4.0.0",
+    "html-pdf": "^2.1.0",
+    "moment": "^2.18.1",
+    "nodemailer": "^4.0.1",
+    "nodemailer-html-to-text": "^2.1.0",
+    "pug": "^2.0.0-rc.2"
+  }
+}

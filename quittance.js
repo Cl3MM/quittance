@@ -74,8 +74,8 @@ pdf.create(html, options).toBuffer((err, buffer) => {
     log(err)
 
     transporter.sendMail({
-      from: '"Françoise CHIROL", <francoise.chirol@gmail.com>', // sender address
-      to: '"Clément ROULLET", <clement.roullet@gmail.com>', // list of receivers
+      from: creds.from,
+      to: creds.to,
       subject: `[QUITTANCE] 👻 Erreur lors de l'envoi du mail 👻`,
       text: `Une erreur est survenue lors de l'envoi de la quittance ${quittanceName} :
 ${err}`,
@@ -104,15 +104,14 @@ ${err}`,
 
   const htmlToText = require('nodemailer-html-to-text').htmlToText
   const mailOptions = {
-    from: 'Françoise CHIROL <francoise.chirol@gmail.com>', // sender address
-    // to: '"CHIROL Françoise", <F.Chirol@cnr.tm.fr>', // list of receivers
-    to: '"Clément ROULLET", <clement.roullet@gmail.com>', // list of receivers
-    subject: `👻 TEST QUITTANCE ${moment().format('DD-MM-YYYY HH:mm')} ✔`, // Subject line
+    from: creds.from,
+    to: creds.to,
+    subject: `👻 TEST QUITTANCE ${moment().format('DD-MM-YYYY HH:mm')} ✔`,,
     html: `<h3>Bonjour Eugénie,</h3>
 <p>Veuillez trouver ci-joint la quittance de loyer pour le mois de ${moment().format('MMMM YYYY')}, pour votre appartement Villa Chartreux à Lyon 01.</p>
 <p>Bien Cordialement,</p>
-<p>F.Roullet-Chirol</p>`, // html body
-    attachments: [{ // binary buffer as an attachment
+<p>F.Roullet-Chirol</p>`,
+    attachments: [{
       filename: quittanceName,
       content: buffer
     }]

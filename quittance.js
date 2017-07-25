@@ -1,0 +1,132 @@
+// npm i -S html-pdf fs-extra pug moment nodemailer nodemailer-html-to-text
+'use strict'
+
+const creds = require('./creds')
+const nodemailer = require('nodemailer')
+const moment = require('moment')
+moment.locale('fr')
+
+const fs = require('fs-extra')
+// const logFile = `./logs/${moment().format('YYYY-MM-DD')}.log`
+// fs.ensureFileSync(logFile)
+
+const log = (txt) => {
+  // fs.outputFileSync(logFile, `${moment().toISOString()} ${txt.toString().trimRight(' ').trimRight('\n')}` + '\n', { flag: 'a'})
+  console.log(`${moment().toISOString()} ${txt.toString()}`)
+}
+
+log(`==== starting quittance task ====`)
+const pug = require('pug')
+const pdf = require('html-pdf')
+const options = {
+  zoomFactor: 1,
+  type: "pdf",
+  quality: "90",
+  // height: "297mm",
+  // width: "210mm",
+  format: 'A3',
+  base: `file:///${__dirname.replace(/\\/g, '\\\\')}`.replace(/\//g, '\\')
+}
+// Compile the source code
+const fn = pug.compileFile('./quittance.pug')
+
+const params = {
+  num: moment().diff(moment([2017, 6, 1]), 'months') + 1,
+  img: `${options.base}//signature.jpg`.replace(/\//g, '\\'),
+  from: moment().startOf('M').format('Do MMMM YYYY'),
+  to: moment().endOf('M').format('Do MMMM YYYY'),
+  on: moment().date(3).format('DD MMMM YYYY'),
+  date: moment().format('DD MMMM YYYY'),
+  name: 'Eugénie BERTRAND'
+}
+log(`pug params:
+${JSON.stringify(params, null, 2)}
+`)
+
+// Render a set of data
+const html = fn(params)
+const quittanceName = `quittance_${moment().format('YYYY-MM')}.pdf`
+
+log(`quittance file name: ${quittanceName}`)
+
+// create reusable transporter object using the default SMTP transport
+const smtp = {
+  auth: {
+    user: creds.user,
+    pass: creds.pass
+  }
+}
+
+const transporter = nodemailer.createTransport({
+  secure: true,
+  debug: true,
+  service: 'Gmail',
+  auth: {
+    user: creds.user,
+    pass: creds.pass
+  }
+})
+
+log(`generating quittance...`)
+pdf.create(html, options).toBuffer((err, buffer) => {
+  if (err) {
+    log(`quittance generation failed:`)
+    log(err)
+
+    transporter.sendMail({
+      from: '"Françoise CHIROL", <francoise.chirol@gmail.com>', // sender address
+      to: '"Clément ROULLET", <clement.roullet@gmail.com>', // list of receivers
+      subject: `[QUITTANCE] 👻 Erreur lors de l'envoi du mail 👻`,
+      text: `Une erreur est survenue lors de l'envoi de la quittance ${quittanceName} :
+${err}`,
+      attachments: [
+        {
+          filename: quittanceName,
+          content: buffer
+        },
+        {
+          filename: logFile,
+          content: fs.createReadStream(logFile)
+        }
+      ]
+    }, (error, info) => {
+      if (error) {
+        log(`an error occured while sending error email`)
+        log(error)
+        return console.log(error)
+      }
+      log(`email sent successfully !`)
+      console.log('Message %s sent: %s', info.messageId, info.response)
+    })
+    return console.log(err)
+  }
+  log(`quittance generated, sending email....`)
+
+  const htmlToText = require('nodemailer-html-to-text').htmlToText
+  const mailOptions = {
+    from: 'Françoise CHIROL <francoise.chirol@gmail.com>', // sender address
+    // to: '"CHIROL Françoise", <F.Chirol@cnr.tm.fr>', // list of receivers
+    to: '"Clément ROULLET", <clement.roullet@gmail.com>', // list of receivers
+    subject: `👻 TEST QUITTANCE ${moment().format('DD-MM-YYYY HH:mm')} ✔`, // Subject line
+    html: `<h3>Bonjour Eugénie,</h3>
+<p>Veuillez trouver ci-joint la quittance de loyer pour le mois de ${moment().format('MMMM YYYY')}, pour votre appartement Villa Chartreux à Lyon 01.</p>
+<p>Bien Cordialement,</p>
+<p>F.Roullet-Chirol</p>`, // html body
+    attachments: [{ // binary buffer as an attachment
+      filename: quittanceName,
+      content: buffer
+    }]
+  }
+  transporter.use('compile', htmlToText())
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      log(`an error occured while sending email`)
+      log(error)
+      return console.log(error)
+    }
+    log(`email sent successfully !`)
+    console.log('Message %s sent: %s', info.messageId, info.response)
+  })
+})

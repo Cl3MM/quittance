@@ -1,0 +1,91 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    title Quittance de Loyer
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/semantic-ui/2.2.10/semantic.min.css')
+    style.
+      @media print {
+      html, body {
+        zoom: 0.65!important;
+      }
+      }
+      html, body {
+        zoom: 0.65!important;
+      }
+      body {
+      position: relative;
+      margin: 30px;
+      margin-top: 70px;
+      max-height: 297mm;
+      max-width: 210mm;
+      min-height: 297mm;
+      min-width: 210mm;
+      height: 297mm;
+      width: 210mm;
+      }
+      html, body {
+      -webkit-print-color-adjust: exact;
+      }
+      .footer {
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      }
+      .mg-b-25 { margin-bottom: 25px!important; }
+      .mg-t-20 { margin-top: 20px!important; }
+      .mg-t-40 { margin-top: 40px!important; }
+      .mg-b-40 { margin-bottom: 40px!important; }
+      table { margin-top: 10px!important; margin-bottom: 15px!important; }
+  body
+    .ui.fluid.container
+      .ui.grid
+        .row.mg-b-25
+          .column
+            .ui.list
+              .item ROULLET PAUL
+              .item 43 AV LANESSAN
+              .item 69410 CHAMPAGNE AU MONT D’OR
+        .row.mg-b-40
+          .column.center.aligned
+            h1 Quittance de loyer n°#{ num }
+            h2 #{ name }
+        .row
+          .column
+            p
+              | Pour la période commençant le #{from} et se terminant le #{to}
+        .row
+          .centered.ten.wide.column
+            table.ui.compact.celled.table
+              thead
+                tr
+                  th
+                  th.center.aligned Montant (€)
+              tbody
+                tr
+                  td Loyer appartement + parking
+                  td.center.aligned 830,00€
+                tr
+                  td Provisions sur charges
+                  td.center.aligned 45,00€
+              tfoot
+                tr
+                  th Total
+                  th.center.aligned 875,00€
+        .row
+          .column
+            p.mg-b-25 Virement de Melle #{ name } : le #{ on }
+            p.mg-t-20 Cette somme correspond au loyer du logement situé à l’adresse suivante :
+            .ui.list
+              .item 9 rue des chartreux
+              .item Lyon 69001
+        .row
+          .right.floated.left.aligned.six.wide.column
+            p A Champagne le #{ date }
+            img.ui.image(src='' + img, alt='signature')
+    .footer
+      .ui.grid
+        .column.center.aligned
+          small
+            em Quittance de loyer à conserver 5 ans par le locataire

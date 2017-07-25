@@ -1,0 +1,9 @@
+version: '2'
+services:
+  quittance:
+    image: quittance
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: cron -f -L 15
+    restart: always

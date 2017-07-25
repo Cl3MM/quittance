@@ -1,0 +1,12 @@
+#*/2 * * * * cd /data && node quittance.js >> /var/log/cron > ${STDOUT_LOC} 2> ${STDERR_LOC}
+0 8 26 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+0 10 26 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+0 12 26 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+35 17 25 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+30 18 25 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+0 18 25 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+0 19 25 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+30 19 25 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron 2>&1
+0 8 5 * * cd /data && /usr/local/bin/node quittance.js >> /var/log/cron
+
+

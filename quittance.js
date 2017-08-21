@@ -103,10 +103,10 @@ ${err}`,
   log(`quittance generated, sending email....`)
 
   const htmlToText = require('nodemailer-html-to-text').htmlToText
-  const mailOptions = {
+  let mailOptions = {
     from: creds.from,
     to: creds.to,
-    subject: `👻 TEST QUITTANCE ${moment().format('DD-MM-YYYY HH:mm')} ✔`,,
+    subject: `Quittance ${moment().format('DD-MM-YYYY HH:mm')} ✔`,
     html: `<h3>Bonjour Eugénie,</h3>
 <p>Veuillez trouver ci-joint la quittance de loyer pour le mois de ${moment().format('MMMM YYYY')}, pour votre appartement Villa Chartreux à Lyon 01.</p>
 <p>Bien Cordialement,</p>
@@ -116,6 +116,10 @@ ${err}`,
       content: buffer
     }]
   }
+  if (creds.bcc) {
+    mailOptions.bcc = creds.bcc
+  }
+
   transporter.use('compile', htmlToText())
 
   // send mail with defined transport object

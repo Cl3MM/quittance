@@ -46,7 +46,7 @@ const params = {
   name: creds.name,
   loyer: creds.loyer,
   charges: creds.charges,
-  total: ('' + (+(creds.loyer.replace(',', '.')) + +(creds.charges.replace(',', '.')))).replace('.', ',')
+  total: ('' + ( +( creds.loyer.replace(',', '.')) + +(creds.charges.replace(',', '.'))).toFixed(2)).replace('.', ',')
 }
 log(`pug params:
 ${JSON.stringify(params, null, 2)}

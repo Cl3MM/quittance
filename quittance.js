@@ -43,7 +43,10 @@ const params = {
     .date(3)
     .format("DD MMMM YYYY"),
   date: moment().format("DD MMMM YYYY"),
-  name: "Eugénie BERTRAND"
+  name: creds.name,
+  loyer: creds.loyer,
+  charges: creds.charges,
+  total: ('' + (+(creds.loyer.replace(',', '.')) + +(creds.charges.replace(',', '.')))).replace('.', ',')
 }
 log(`pug params:
 ${JSON.stringify(params, null, 2)}
@@ -108,7 +111,7 @@ ${err}`,
     from: creds.from,
     to: creds.to,
     subject: `Quittance ${moment().format("DD-MM-YYYY HH:mm")} ✔`,
-    html: `<h3>Bonjour Eugénie,</h3>
+    html: `<h3>Bonjour ${creds.name},</h3>
 <p>Veuillez trouver ci-joint la quittance de loyer pour le mois de ${moment().format(
       "MMMM YYYY"
     )}, pour votre appartement Villa Chartreux à Lyon 01.</p>
